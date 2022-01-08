@@ -24,11 +24,11 @@ std::string trim(const std::string &s) {
     return rtrim(ltrim(s));
 }
 
+constexpr std::string_view delim = ",";
 } // anonymous namespace
 
 
 std::optional<ConceptContext> readConceptCSV(std::istream& is) {
-    constexpr std::string_view delim = ",";
     ConceptContext result;
 
     std::string line;
@@ -65,7 +65,7 @@ std::optional<ConceptContext> readConceptCSV(std::istream& is) {
             rowLen = row.size();
 
         if (rowLen != static_cast<int>(row.size())) {
-            fmt::print("Entry number mismatch in row '{}', found '{}' entries, expected '{}'\n", i, static_cast<int>(row.size()), rowLen);
+            fmt::print("Entry number mismatch in row '{}', found '{}' entries, expected '{}'\n", result.rows.size() + 1, static_cast<int>(row.size()), rowLen);
             return std::nullopt;
         }
 

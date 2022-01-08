@@ -4,17 +4,12 @@
 #include "include/csv.h"
 
 bitset closure(const bitset& intents, const ConceptContext& context) {
-    std::set<int> rows;
+    bitset result(intents.size(), 1);
     int i = 0;
     for (const auto& r : context.rows) {
         if (subset(intents, r))
-            rows.insert(i);
+            result = set_intersect(result, context.rows[i]);
         ++i;
-    }
-
-    bitset result(intents.size(), 1);
-    for (int r : rows) {
-        result = set_intersect(result, context.rows[r]);
     }
 
     return result;
