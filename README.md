@@ -1,4 +1,6 @@
-# Concept
+# Formal Concept Analysis
+
+For a great introduction and motivation why FCA is useful, I highly recommend [this](https://www.youtube.com/watch?v=Xuxm929tIRY) talk.
 
 Small implementation from Formal Concept Analysis, based on the Ganter's next closure algorithm from:
 Ganter B. (2010) Two Basic Algorithms in Concept Analysis. In: Kwuida L., Sertkaya B. (eds) Formal Concept Analysis.
