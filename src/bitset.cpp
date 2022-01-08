@@ -1,5 +1,6 @@
 #include "include/bitset.h"
 #include <cassert>
+#include <algorithm>
 
 bool subset(const bitset& lhs, const bitset& rhs) {
     assert(lhs.size() == rhs.size());
@@ -37,3 +38,7 @@ bitset set_subtract(const bitset& lhs, const bitset& rhs) {
     return result;
 }
 
+
+int set_bits(const bitset& s) {
+    return std::count(s.begin(), s.end(), true);
+}

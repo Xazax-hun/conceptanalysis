@@ -24,14 +24,18 @@ int main(int argc, char* argv[]) {
 
     auto lattice = conceptAnalysis(*data);
     for (const auto& conc : lattice.concepts) {
-        for (int i : conc.objects) {
+        for (int i : to_sparse(conc.objects)) {
             fmt::print("{} ", data->objectNames[i]);
         }
         fmt::print("\n");
-        for (int i : conc.attributes) {
+        for (int i : to_sparse(conc.attributes)) {
             fmt::print("{} ", data->attributeNames[i]);
         }
         fmt::print("\n");
         fmt::print("-----------------\n");
+    }
+    fmt::print("Edges:\n");
+    for (const auto& edge : lattice.less) {
+        fmt::print("{} -> {}\n", edge.first, edge.second);
     }
 }

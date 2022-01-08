@@ -1,5 +1,8 @@
 #include "include/concept.h"
 
+#include <algorithm>
+#include <cassert>
+
 #include "include/bitset.h"
 #include "include/csv.h"
 
@@ -58,6 +61,52 @@ std::optional<bitset> nextClosure(bitset intents, const ConceptContext& data) {
     return std::nullopt;
 }
 
+std::set<bitset> upperNeighbors(const bitset& conc, const ConceptContext& data) {
+    int i = -1;
+    bitset n = conc;
+    n.flip();
+    bitset toCloseWith = n;
+    for (bool b : n) {
+        ++i;
+        if (!b)
+            continue;
+
+        bitset candidate = conc;
+        candidate[i] = 1;
+        candidate = closure(candidate, data);
+        candidate = set_intersect(candidate, toCloseWith);
+        if (candidate[i] == 1 && set_bits(candidate) == 1)
+            continue;
+        toCloseWith[i] = 0;
+    }
+
+    i = -1;
+    std::set<bitset> result;
+    for (bool b : toCloseWith) {
+        ++i;
+        if (!b)
+            continue;
+
+        bitset candidate = conc;
+        candidate[i] = 1;
+        result.insert(closure(candidate, data));
+    }
+    return result;
+}
+
+void constructGraph(Lattice& l, const ConceptContext& data) {
+    int i = 0;
+    for (auto conc : l.concepts) {
+        auto upper = upperNeighbors(conc.attributes, data);
+        for(const auto& bset : upper) {
+            auto it = std::lower_bound(l.concepts.begin(), l.concepts.end(), bset, [](const Concept& c, const bitset& bs) { return c.attributes < bs; });
+            assert(it != l.concepts.end());
+            l.less.emplace_back(i, it - l.concepts.begin());
+        }
+        ++i;
+    }
+}
+
 Lattice conceptAnalysis(const ConceptContext& data) {
     Lattice result;
 
@@ -65,10 +114,12 @@ Lattice conceptAnalysis(const ConceptContext& data) {
     std::optional<bitset> next = closure(empty, data);
 
     while(next) {
-        result.concepts.emplace_back(to_sparse(extents(*next, data)), to_sparse(*next));
+        result.concepts.emplace_back(extents(*next, data), *next);
         
         next = nextClosure(*next, data); 
     }
+
+    constructGraph(result, data);
 
     return result;
 }

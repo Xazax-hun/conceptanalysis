@@ -8,3 +8,5 @@ ICFCA 2010. Lecture Notes in Computer Science, vol 5986. Springer, Berlin, Heide
 See also:
 * https://en.wikipedia.org/wiki/Formal_concept_analysis
 * https://dl.acm.org/doi/10.1145/291252.288273
+* https://doi.org/10.1007/978-3-662-49291-8
+* https://doi.org/10.1017/CBO9780511809088

@@ -8,8 +8,8 @@
 #include "include/csv.h"
 
 struct Concept {
-    std::set<int> objects;
-    std::set<int> attributes;
+    bitset objects;
+    bitset attributes;
 };
 
 struct Lattice {

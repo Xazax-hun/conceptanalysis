@@ -10,5 +10,6 @@ bitset set_union(const bitset& lhs, const bitset& rhs);
 bitset set_intersect(const bitset& lhs, const bitset& rhs);
 bitset set_subtract(const bitset& lhs, const bitset& rhs);
 bitset set_union(const bitset& lhs, const bitset& rhs);
+int set_bits(const bitset& s);
 
 #endif
