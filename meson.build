@@ -6,6 +6,6 @@ project('concept', 'cpp',
 fmt_dep = dependency('fmt')
 
 # Executables
-sources = ['main.cpp']
+sources = ['main.cpp', 'src/bitset.cpp', 'src/csv.cpp', 'src/concept.cpp']
 executable('concept', sources,
            dependencies: fmt_dep)
