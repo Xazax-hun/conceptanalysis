@@ -7,7 +7,7 @@
 #include "include/csv.h"
 
 bitset closure(const bitset& intents, const ConceptContext& context) {
-    bitset result(intents.size(), 1);
+    bitset result(intents.size(), true);
     int i = 0;
     for (const auto& r : context.rows) {
         if (subset(intents, r))
@@ -19,11 +19,11 @@ bitset closure(const bitset& intents, const ConceptContext& context) {
 }
 
 bitset extents(const bitset& intents, const ConceptContext& context) {
-    bitset exts(context.objectNames.size(), 0);
+    bitset exts(context.objectNames.size(), false);
     int i = 0;
     for (const auto& r : context.rows) {
         if (subset(intents, r))
-            exts[i] = 1;
+            exts[i] = true;
         ++i;
     }
     return exts;
@@ -41,10 +41,10 @@ std::set<int> to_sparse(const bitset& vec) {
 std::optional<bitset> nextClosure(bitset intents, const ConceptContext& data) {
     for (int i = static_cast<int>(data.rows.front().size()) - 1; i >= 0; --i) {
         if (intents[i]) {
-            intents[i] = 0;
+            intents[i] = false;
         } else {
             bitset candidate = intents;
-            candidate[i] = 1;
+            candidate[i] = true;
             candidate = closure(candidate, data);
             bitset toCheck = set_subtract(candidate, intents);
             bool success = true;
@@ -72,12 +72,12 @@ std::set<bitset> upperNeighbors(const bitset& conc, const ConceptContext& data) 
             continue;
 
         bitset candidate = conc;
-        candidate[i] = 1;
+        candidate[i] = true;
         candidate = closure(candidate, data);
         candidate = set_intersect(candidate, toCloseWith);
-        if (candidate[i] == 1 && set_bits(candidate) == 1)
+        if (candidate[i] && set_bits(candidate) == 1)
             continue;
-        toCloseWith[i] = 0;
+        toCloseWith[i] = false;
     }
 
     i = -1;
@@ -88,7 +88,7 @@ std::set<bitset> upperNeighbors(const bitset& conc, const ConceptContext& data) 
             continue;
 
         bitset candidate = conc;
-        candidate[i] = 1;
+        candidate[i] = true;
         result.insert(closure(candidate, data));
     }
     return result;
@@ -96,7 +96,7 @@ std::set<bitset> upperNeighbors(const bitset& conc, const ConceptContext& data) 
 
 void constructGraph(Lattice& l, const ConceptContext& data) {
     int i = 0;
-    for (auto conc : l.concepts) {
+    for (const auto& conc : l.concepts) {
         auto upper = upperNeighbors(conc.attributes, data);
         for(const auto& bset : upper) {
             auto it = std::lower_bound(l.concepts.begin(), l.concepts.end(), bset, [](const Concept& c, const bitset& bs) { return c.attributes < bs; });
@@ -110,7 +110,7 @@ void constructGraph(Lattice& l, const ConceptContext& data) {
 Lattice conceptAnalysis(const ConceptContext& data) {
     Lattice result;
 
-    bitset empty(data.rows.front().size(), 0);
+    bitset empty(data.rows.front().size(), false);
     std::optional<bitset> next = closure(empty, data);
 
     while(next) {

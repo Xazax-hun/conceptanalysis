@@ -13,12 +13,12 @@ Concept minimizedForDisplay(int conc, const Lattice& l, const ConceptContext& da
             succs.insert(e.second);
     }
 
-    bitset oldAttrs(data.attributeNames.size(), 0);
+    bitset oldAttrs(data.attributeNames.size(), false);
     for (auto pred : preds)
         oldAttrs = set_union(oldAttrs, l.concepts[pred].attributes);
     bitset newAttrs = set_subtract(l.concepts[conc].attributes, oldAttrs);
     
-    bitset oldObjs(data.objectNames.size(), 0);
+    bitset oldObjs(data.objectNames.size(), false);
     for (auto succ : succs)
         oldObjs = set_union(oldObjs, l.concepts[succ].objects);
     bitset newObjs = set_subtract(l.concepts[conc].objects, oldObjs);
