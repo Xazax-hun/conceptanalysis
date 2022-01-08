@@ -2,7 +2,7 @@
 #include <fstream>
 
 #include "include/concept.h"
-
+#include "include/dot.h"
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -23,19 +23,5 @@ int main(int argc, char* argv[]) {
     }
 
     auto lattice = conceptAnalysis(*data);
-    for (const auto& conc : lattice.concepts) {
-        for (int i : to_sparse(conc.objects)) {
-            fmt::print("{} ", data->objectNames[i]);
-        }
-        fmt::print("\n");
-        for (int i : to_sparse(conc.attributes)) {
-            fmt::print("{} ", data->attributeNames[i]);
-        }
-        fmt::print("\n");
-        fmt::print("-----------------\n");
-    }
-    fmt::print("Edges:\n");
-    for (const auto& edge : lattice.less) {
-        fmt::print("{} -> {}\n", edge.first, edge.second);
-    }
+    fmt::print("{}", renderDot(lattice, *data));
 }
